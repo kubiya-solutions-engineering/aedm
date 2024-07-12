@@ -1,0 +1,86 @@
+tools:
+  - name: incident-response
+    image: python:3.11
+    description: Create a service ticket in Freshservice and send a Slack message with incident details, Freshservice ticket details, and a Teams bridge link.
+    alias: incident-response
+    content: |
+      # Set default values for environment variables
+      REPO_URL="${REPO_URL:-https://github.com/michagonzo77/aedm}"
+      REPO_NAME="${REPO_NAME:-aedm}"
+      SOURCE_CODE_DIR="${SOURCE_CODE_DIR:-/src}"
+      REPO_BRANCH="${REPO_BRANCH:-main}"
+      REPO_DIR="${REPO_DIR:-$REPO_NAME}"
+      BIN_DIR="${BIN_DIR:-/usr/local/bin}"
+      APT_CACHE_DIR="${APT_CACHE_DIR:-/var/cache/apt/archives}"
+      PIP_CACHE_DIR="${PIP_CACHE_DIR:-/var/cache/pip}"
+      
+      # Create cache directories
+      mkdir -p "$APT_CACHE_DIR"
+      mkdir -p "$BIN_DIR"
+      mkdir -p "$PIP_CACHE_DIR"
+
+      install_git() {
+        apt-get update -qq > /dev/null && apt-get install -y -qq git > /dev/null
+      }
+
+      install_jq() {
+        apt-get update -qq > /dev/null && apt-get install -y -qq jq > /dev/null
+      }
+
+      install_slack_cli() {
+        curl -s https://packagecloud.io/install/repositories/slacktechnologies/slack/script.deb.sh | bash > /dev/null
+        apt-get install -y -qq slack > /dev/null
+      }
+
+      # Install git, jq, and slack CLI
+      install_git
+      install_jq
+      install_slack_cli
+
+      # Clone repository if not already cloned
+      if [ ! -d "$REPO_DIR" ]; then
+        git clone --branch "$REPO_BRANCH" "$REPO_URL" "$REPO_DIR" > /dev/null
+      fi
+
+      # cd into the cloned repo
+      cd "${REPO_DIR}/${SOURCE_CODE_DIR}"
+
+      # Run the script
+      chmod +x ./incident-response/incident-response.sh
+      exec ./incident-response/incident-response.sh --description "{{ .description }}" --servicename "{{ .servicename }}" --title "{{ .title }}" --incident_url "{{ .incident_url }}" --slackincidentcommander "{{ .slackincidentcommander }}" --slackdetectionmethod "{{ .slackdetectionmethod }}" --slackbusinessimpact "{{ .slackbusinessimpact }}" --incident_id "{{ .incident_id }}" --bridge_url "{{ .bridge_url }}"
+    args:
+      - name: description
+        description: The description of the incident.
+        required: true
+      - name: servicename
+        description: The name of the service.
+        required: true
+      - name: title
+        description: The title of the incident.
+        required: true
+      - name: incident_url
+        description: The URL of the incident.
+        required: true
+      - name: slackincidentcommander
+        description: The Slack ID of the incident commander.
+        required: true
+      - name: slackdetectionmethod
+        description: The method of detection for the incident.
+        required: true
+      - name: slackbusinessimpact
+        description: The business impact of the incident.
+        required: true
+      - name: incident_id
+        description: The ID of the incident.
+        required: true
+      - name: bridge_url
+        description: The URL of the bridge.
+        required: true
+    env:
+      - FSAPI_SANDBOX
+      - SLACK_API_TOKEN
+      - SLACK_CHANNEL_ID
+      - SLACK_THREAD_TS
+    with_volumes:
+      - name: sqlite_data
+        path: /sqlite_data

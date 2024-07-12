@@ -1,0 +1,64 @@
+# This file contains the tool definitions for the approval calling logic
+tools:
+  - name: fastly-realtime-monitor
+    image: python:3.11
+    description: Monitors Fastly services in real-time and sends notifications to Slack.
+    alias: fastly-realtime-monitor
+    content: |
+      # Set default values for environment variables
+      REPO_URL="${REPO_URL:-https://github.com/michagonzo77/aedm}"
+      REPO_NAME="${REPO_NAME:-aedm}"
+      SOURCE_CODE_DIR="${SOURCE_CODE_DIR:-/src}"
+      REPO_BRANCH="${REPO_BRANCH:-main}"
+      REPO_DIR="${REPO_DIR:-$REPO_NAME}"
+      BIN_DIR="${BIN_DIR:-/usr/local/bin}"
+      APT_CACHE_DIR="${APT_CACHE_DIR:-/var/cache/apt/archives}"
+      PIP_CACHE_DIR="${PIP_CACHE_DIR:-/var/cache/pip}"
+      
+      # Create cache directories
+      mkdir -p "$APT_CACHE_DIR"
+      mkdir -p "$BIN_DIR"
+      mkdir -p "$PIP_CACHE_DIR"
+
+      install_git() {
+        apt-get update -qq > /dev/null && apt-get install -y -qq git > /dev/null
+      }
+
+      # Function to install pip dependencies if not cached
+      install_pip_dependencies() {
+        export PIP_CACHE_DIR="$PIP_CACHE_DIR"
+        pip install -r requirements.txt --cache-dir "$PIP_CACHE_DIR" --quiet > /dev/null
+      }
+
+      # Install git
+      install_git
+
+      # Clone repository if not already cloned
+      if [ ! -d "$REPO_DIR" ]; then
+        git clone --branch "$REPO_BRANCH" "$REPO_URL" "$REPO_DIR" > /dev/null
+      fi
+
+      # cd into the cloned repo
+      cd "${REPO_DIR}/${SOURCE_CODE_DIR}"
+
+      # Install pip dependencies
+      install_pip_dependencies
+
+      # Run the script
+      export PYTHONPATH="${PYTHONPATH}:/${REPO_DIR}/${SOURCE_CODE_DIR}"
+      exec python fastly/realtime-fastly.py --environment "{{ .environment }}" --service_name "{{ .service_name }}"
+    args:
+      - name: environment
+        description: The environment to monitor (production, dev, qa)
+        required: true
+      - name: service_name
+        description: The name of the Fastly service to monitor
+        required: true
+    env:
+      - FASTLY_API_TOKEN # Email of the user making the request
+      - SLACK_API_TOKEN # AWS profile to use for the operation
+      - SLACK_CHANNEL_ID # API key for OpenAI
+      - SLACK_THREAD_TS # API base for OpenAI
+    with_volumes:
+      - name: sqlite_data
+        path: /sqlite_data
