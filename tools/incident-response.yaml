@@ -77,7 +77,7 @@ tools:
         description: The URL of the bridge.
         required: true
     env:
-      - FSAPI_SANDBOX
+      - FSAPI_PROD
       - SLACK_API_TOKEN
       - SLACK_CHANNEL_ID
       - SLACK_THREAD_TS

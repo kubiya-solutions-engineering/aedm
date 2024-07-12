@@ -12,7 +12,7 @@ create_ticket() {
     local slackbusinessimpact="$7"
     local incident_id="$8"
     local payload="{\"description\": \"$description</br><strong>Incident Commander:</strong>$slackincidentcommander</br><strong>Detection Method:</strong>$slackdetectionmethod</br><strong>Business Impact:</strong>$slackbusinessimpact</br><strong>Ticket Link:</strong>$incident_url\", \"subject\": \"TESTING $servicename - $title\", \"email\": \"devsecops@aenetworks.com\", \"priority\": 1, \"status\": 2, \"source\": 8, \"category\": \"DevOps\", \"sub_category\": \"Pageout\", \"tags\": [\"PDID_$incident_id\"]}"
-    curl -u $FSAPI_SANDBOX:X -H "Content-Type: application/json" -X POST -d "$payload" -o response.json "$url"
+    curl -u $FSAPI_PROD:X -H "Content-Type: application/json" -X POST -d "$payload" -o response.json "$url"
 }
 
 # Function to extract ticket ID from response

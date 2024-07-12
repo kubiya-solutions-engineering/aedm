@@ -7,7 +7,7 @@ EOT
 llm_model          = "azure/gpt-4o"
 agent_image        = "kubiya/base-agent:tools-v5"
 
-secrets            = ["FSAPI_SANDBOX"]
+secrets            = ["FSAPI_PROD"]
 integrations       = ["slack"]
 users              = []
 groups             = ["Admin", "Users"]
