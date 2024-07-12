@@ -11,7 +11,7 @@ secrets            = ["FSAPI_SANDBOX"]
 integrations       = ["slack"]
 users              = []
 groups             = ["Admin", "Users"]
-agent_tool_sources = ["https://github.com/michagonzo77/aedm"]
+agent_tool_sources = ["https://github.com/kubiya-solutions-engineering/aedm"]
 links              = []
 environment_variables = {}
 

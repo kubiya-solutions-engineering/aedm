@@ -5,7 +5,7 @@ tools:
     alias: incident-response
     content: |
       # Set default values for environment variables
-      REPO_URL="${REPO_URL:-https://github.com/michagonzo77/aedm}"
+      REPO_URL="${REPO_URL:-https://github.com/kubiya-solutions-engineering/aedm}"
       REPO_NAME="${REPO_NAME:-aedm}"
       SOURCE_CODE_DIR="${SOURCE_CODE_DIR:-/src}"
       REPO_BRANCH="${REPO_BRANCH:-main}"

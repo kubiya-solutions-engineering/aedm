@@ -6,7 +6,7 @@ tools:
     alias: fastly-realtime-monitor
     content: |
       # Set default values for environment variables
-      REPO_URL="${REPO_URL:-https://github.com/michagonzo77/aedm}"
+      REPO_URL="${REPO_URL:-https://github.com/kubiya-solutions-engineering/aedm}"
       REPO_NAME="${REPO_NAME:-aedm}"
       SOURCE_CODE_DIR="${SOURCE_CODE_DIR:-/src}"
       REPO_BRANCH="${REPO_BRANCH:-main}"
@@ -55,10 +55,10 @@ tools:
         description: The name of the Fastly service to monitor
         required: true
     env:
-      - FASTLY_API_TOKEN # Email of the user making the request
-      - SLACK_API_TOKEN # AWS profile to use for the operation
-      - SLACK_CHANNEL_ID # API key for OpenAI
-      - SLACK_THREAD_TS # API base for OpenAI
+      - FASTLY_API_TOKEN
+      - SLACK_API_TOKEN
+      - SLACK_CHANNEL_ID
+      - SLACK_THREAD_TS
     with_volumes:
       - name: sqlite_data
         path: /sqlite_data
