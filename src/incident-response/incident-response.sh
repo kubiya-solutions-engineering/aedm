@@ -2,7 +2,7 @@
 
 # Function to create a service ticket
 create_ticket() {
-    local url="https://aenetworks-fs-sandbox.freshservice.com/api/v2/tickets"
+    local url="https://aenetworks.freshservice.com/api/v2/tickets"
     local description="$1"
     local servicename="$2"
     local title="$3"
@@ -61,12 +61,11 @@ TICKET_ID=$(extract_ticket_id)
 export TICKET_ID
 
 # Generate ticket URL
-TICKET_URL="https://aenetworks-fs-sandbox.freshservice.com/a/tickets/$TICKET_ID"
+TICKET_URL="https://aenetworks.freshservice.com/a/tickets/$TICKET_ID"
 
-# Format the message
 MESSAGE=$(cat <<EOF
 ************** SEV 1 ****************
-<@U074TSUMZEJ>
+<@U04JCDSHS76> <@U04J2MTMRFD> <@U04FZPQSY3H> <@U048QRBV2NA> <@U04UKPX585S> <@U02SSCGCQQ6>
 Incident Commander: $slackincidentcommander
 Detection Method: $slackdetectionmethod
 Business Impact: $slackbusinessimpact
@@ -77,8 +76,9 @@ We will keep everyone posted on this channel as we assess the issue further.
 EOF
 )
 
+
 # Export MESSAGE as an environment variable
 export MESSAGE
 
 # Send the message to the Slack channel using the Slack API
-send_slack_message "#kubiya-michaelg-test" "$MESSAGE"
+send_slack_message "#kubiya_testing" "$MESSAGE"
