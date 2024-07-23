@@ -43,3 +43,7 @@ starters = [
 // Very useful for debugging and troubleshooting
 // DO NOT USE IN PRODUCTION
 debug = true
+
+// dry run
+// When enabled, the agent will not apply the changes but will show the changes that will be applied
+dry_run = false

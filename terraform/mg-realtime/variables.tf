@@ -67,6 +67,12 @@ variable "debug" {
   default     = false
 }
 
+variable "dry_run" {
+  description = "Enable dry run mode (no changes will be made to infrastructure from the agent)"
+  type        = bool
+  default     = false
+}
+
 variable "log_level" {
   description = "Log level"
   type        = string
