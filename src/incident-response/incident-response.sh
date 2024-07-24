@@ -81,4 +81,4 @@ EOF
 export MESSAGE
 
 # Send the message to the Slack channel using the Slack API
-send_slack_message "#kubiya_testing" "$MESSAGE"
+send_slack_message "#incident_response" "$MESSAGE"
