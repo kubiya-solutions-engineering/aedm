@@ -1,4 +1,3 @@
-# This file contains the tool definitions for the approval calling logic
 tools:
   - name: fastly-cache-clear
     image: python:3.11
@@ -30,6 +29,15 @@ tools:
         pip install -r requirements.txt --cache-dir "$PIP_CACHE_DIR" --quiet > /dev/null
       }
 
+      # Function to install Fastly CLI
+      install_fastly_cli() {
+        curl -o /tmp/fastly.deb -L https://github.com/fastly/cli/releases/download/v10.10.0/fastly_10.10.0_linux_amd64.deb
+        apt-get install -y /tmp/fastly.deb > /dev/null
+        rm /tmp/fastly.deb
+        chmod +x /usr/local/bin/fastly
+        chown appuser:appuser /usr/local/bin/fastly
+      }
+
       # Install git
       install_git
 
@@ -52,6 +60,9 @@ tools:
       # Install pip dependencies
       install_pip_dependencies
 
+      # Install Fastly CLI
+      install_fastly_cli
+
       # Run the script
       chmod +x ./purge-fastly-cache.sh
       exec ./purge-fastly-cache.sh "{{ .service_name }}" "{{ .brand_or_platform_or_operation }}"
@@ -61,13 +72,4 @@ tools:
         required: true
       - name: brand_or_platform_or_operation
         description: |
-          The brand, platform, or operation to perform cache clear. Available options include brands: aenetworks, aetv, biography, crimecentral, crimeandinvestigation, fyi, history, historyvault, historyvaultca, lifetime, lifetimemovies, lmc; and platforms: android, androidtv, appletv, firetv, ios, kepler, roku, tizen, tvos, vizio, web, webos, weblanding, xclass.
-        required: true
-    env:
-      - FASTLY_API_TOKEN
-      - SLACK_API_TOKEN
-      - SLACK_CHANNEL_ID
-      - SLACK_THREAD_TS
-    with_volumes:
-      - name: sqlite_data
-        path: /sqlite_data
+          The brand, platform, or operation to perform cache clear. Available options include brands: aenetworks, aetv, biography, crimecentral, crimeandinvestigation, fyi, history, historyvault, historyvaultca, lifetime, lifetimemovies, lmc; and platforms: android, androidtv, appletv, firetv, ios, kepler, roku, tizen, tvos, vizio, web, webos
