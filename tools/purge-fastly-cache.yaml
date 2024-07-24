@@ -24,6 +24,12 @@ tools:
         apt-get update -qq > /dev/null && apt-get install -y -qq git > /dev/null
       }
 
+      # Function to install pip dependencies if not cached
+      install_pip_dependencies() {
+        export PIP_CACHE_DIR="$PIP_CACHE_DIR"
+        pip install -r requirements.txt --cache-dir "$PIP_CACHE_DIR" --quiet > /dev/null
+      }
+
       # Install git
       install_git
 
@@ -33,16 +39,18 @@ tools:
           GIT_ASKPASS_ENV=$(mktemp)
           chmod +x "$GIT_ASKPASS_ENV"
           echo -e "#!/bin/sh\necho \$GH_TOKEN" > "$GIT_ASKPASS_ENV"
-          export GIT_ASKPASS="$GIT_ASKPASS_ENV"
-          git clone --branch "$REPO_BRANCH" "https://$GH_TOKEN@$(echo $REPO_URL | sed 's|https://||')" "$REPO_DIR" > /dev/null
+          GIT_ASKPASS="$GIT_ASKPASS_ENV" git clone --branch "$REPO_BRANCH" "https://$GH_TOKEN@$(echo $REPO_URL | sed 's|https://||')" "$REPO_DIR" > /dev/null
           rm "$GIT_ASKPASS_ENV"
-        else:
+        else
           git clone --branch "$REPO_BRANCH" "$REPO_URL" "$REPO_DIR" > /dev/null
         fi
       fi
-
+      
       # cd into the cloned repo
       cd "${REPO_DIR}/${SOURCE_CODE_DIR}"
+
+      # Install pip dependencies
+      install_pip_dependencies
 
       # Run the script
       chmod +x ./purge-fastly-cache.sh
