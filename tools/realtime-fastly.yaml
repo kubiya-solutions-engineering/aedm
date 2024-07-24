@@ -54,7 +54,7 @@ tools:
 
       # Run the script
       export PYTHONPATH="${PYTHONPATH}:/${REPO_DIR}/${SOURCE_CODE_DIR}"
-      exec python fastly/realtime-fastly.py --environment "{{ .environment }}" --service_name "{{ .service_name }}"
+      exec python fastly_realtime/realtime-fastly.py --environment "{{ .environment }}" --service_name "{{ .service_name }}"
     args:
       - name: environment
         description: The environment to monitor (production, dev, qa)

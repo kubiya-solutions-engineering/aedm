@@ -39,7 +39,16 @@ tools:
 
       # Clone repository if not already cloned
       if [ ! -d "$REPO_DIR" ]; then
-        git clone --branch "$REPO_BRANCH" "$REPO_URL" "$REPO_DIR" > /dev/null
+        if [ -n "$GH_TOKEN" ]; then
+          GIT_ASKPASS_ENV=$(mktemp)
+          chmod +x "$GIT_ASKPASS_ENV"
+          echo -e "#!/bin/sh\necho \$GH_TOKEN" > "$GIT_ASKPASS_ENV"
+          export GIT_ASKPASS="$GIT_ASKPASS_ENV"
+          git clone --branch "$REPO_BRANCH" "https://$GH_TOKEN@$(echo $REPO_URL | sed 's|https://||')" "$REPO_DIR" > /dev/null
+          rm "$GIT_ASKPASS_ENV"
+        else:
+          git clone --branch "$REPO_BRANCH" "$REPO_URL" "$REPO_DIR" > /dev/null
+        fi
       fi
 
       # cd into the cloned repo
