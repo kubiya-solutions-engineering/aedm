@@ -7,7 +7,7 @@ tools:
       # Set default values for environment variables
       REPO_URL="${REPO_URL:-https://github.com/kubiya-solutions-engineering/aedm}"
       REPO_NAME="${REPO_NAME:-aedm}"
-      SOURCE_CODE_DIR="${SOURCE_CODE_DIR:-/src}"
+      SOURCE_CODE_DIR="${SOURCE_CODE_DIR:-/src/incident-response}"
       REPO_BRANCH="${REPO_BRANCH:-main}"
       REPO_DIR="${REPO_DIR:-$REPO_NAME}"
       BIN_DIR="${BIN_DIR:-/usr/local/bin}"
@@ -43,20 +43,19 @@ tools:
           GIT_ASKPASS_ENV=$(mktemp)
           chmod +x "$GIT_ASKPASS_ENV"
           echo -e "#!/bin/sh\necho \$GH_TOKEN" > "$GIT_ASKPASS_ENV"
-          export GIT_ASKPASS="$GIT_ASKPASS_ENV"
-          git clone --branch "$REPO_BRANCH" "https://$GH_TOKEN@$(echo $REPO_URL | sed 's|https://||')" "$REPO_DIR" > /dev/null
+          GIT_ASKPASS="$GIT_ASKPASS_ENV" git clone --branch "$REPO_BRANCH" "https://$GH_TOKEN@$(echo $REPO_URL | sed 's|https://||')" "$REPO_DIR" > /dev/null
           rm "$GIT_ASKPASS_ENV"
-        else:
+        else
           git clone --branch "$REPO_BRANCH" "$REPO_URL" "$REPO_DIR" > /dev/null
         fi
       fi
-
+      
       # cd into the cloned repo
       cd "${REPO_DIR}/${SOURCE_CODE_DIR}"
 
       # Run the script
-      chmod +x ./incident-response/incident-response.sh
-      exec ./incident-response/incident-response.sh --description "{{ .description }}" --servicename "{{ .servicename }}" --title "{{ .title }}" --incident_url "{{ .incident_url }}" --slackincidentcommander "{{ .slackincidentcommander }}" --slackdetectionmethod "{{ .slackdetectionmethod }}" --slackbusinessimpact "{{ .slackbusinessimpact }}" --incident_id "{{ .incident_id }}" --bridge_url "{{ .bridge_url }}"
+      chmod +x ./incident-response.sh
+      exec ./incident-response.sh --description "{{ .description }}" --servicename "{{ .servicename }}" --title "{{ .title }}" --incident_url "{{ .incident_url }}" --slackincidentcommander "{{ .slackincidentcommander }}" --slackdetectionmethod "{{ .slackdetectionmethod }}" --slackbusinessimpact "{{ .slackbusinessimpact }}" --incident_id "{{ .incident_id }}" --bridge_url "{{ .bridge_url }}"
     args:
       - name: description
         description: The description of the incident.
