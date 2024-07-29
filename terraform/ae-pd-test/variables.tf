@@ -54,7 +54,6 @@ variable "agent_tool_sources" {
   default     = ["https://github.com/kubiyabot/community-tools"] # Default to the community tools repository
 }
 
-
 variable "links" {
   description = "Links for the agent"
   type        = list(string)
@@ -63,6 +62,12 @@ variable "links" {
 
 variable "debug" {
   description = "Enable debug mode"
+  type        = bool
+  default     = false
+}
+
+variable "dry_run" {
+  description = "Enable dry run mode (no changes will be made to infrastructure from the agent)"
   type        = bool
   default     = false
 }

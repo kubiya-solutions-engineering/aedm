@@ -1,14 +1,14 @@
 tools:
-  - name: trigger-major-incident-response
+  - name: page-oncall-engineer
     image: python:3.11
     description: |
-      This tool creates an incident for "Major Incident via Kubi" service in PagerDuty, generates a Teams bridge link, creates a Fresh Service Ticket, sends a SEV1 message in #incident_response Slack channel, and provides the necessary details.
-    alias: trigger-major-incident-response
+      This tool pages the on-call engineer via PagerDuty.
+    alias: page-oncall-engineer
     content: |
       # Set default values for environment variables
       REPO_URL="${REPO_URL:-https://github.com/kubiya-solutions-engineering/aedm}"
       REPO_NAME="${REPO_NAME:-aedm}"
-      SOURCE_CODE_DIR="${SOURCE_CODE_DIR:-/src/trigger-incident}"
+      SOURCE_CODE_DIR="${SOURCE_CODE_DIR:-/src/page-oncall-engineer}"
       REPO_BRANCH="${REPO_BRANCH:-main}"
       REPO_DIR="${REPO_DIR:-$REPO_NAME}"
       BIN_DIR="${BIN_DIR:-/usr/local/bin}"
@@ -28,19 +28,13 @@ tools:
         apt-get update -qq > /dev/null && apt-get install -y -qq jq > /dev/null
       }
 
-      install_slack_cli() {
-        curl -s https://packagecloud.io/install/repositories/slacktechnologies/slack/script.deb.sh | bash > /dev/null
-        apt-get install -y -qq slack > /dev/null
-      }
-
       install_pagerduty_cli() {
         pip install pdpyras
       }
 
-      # Install git, jq, slack CLI, and PagerDuty CLI
+      # Install git, jq, and PagerDuty CLI
       install_git
       install_jq
-      install_slack_cli
       install_pagerduty_cli
 
       # Clone repository if not already cloned
@@ -60,22 +54,14 @@ tools:
       cd "${REPO_DIR}/${SOURCE_CODE_DIR}"
 
       # Run the script
-      chmod +x ./trigger-major-incident-communication.sh
-      exec ./trigger-major-incident-communication.sh --description "{{ .description }}"
+      chmod +x ./page-oncall-engineer.sh
+      exec ./page-oncall-engineer.sh --description "{{ .description }}"
     args:
       - name: description
-        description: The description of the incident.
+        description: The description of the problem.
         required: true
     env:
-      - FSAPI_PROD
-      - SLACK_API_TOKEN
-      - SLACK_CHANNEL_ID
-      - SLACK_THREAD_TS
-      - AZURE_TENANT_ID
-      - AZURE_CLIENT_ID
-      - AZURE_CLIENT_SECRET
-      - PD_API_KEY
-      - KUBIYA_USER_EMAIL
+      - PD_API_TOKEN
     with_volumes:
       - name: sqlite_data
         path: /sqlite_data

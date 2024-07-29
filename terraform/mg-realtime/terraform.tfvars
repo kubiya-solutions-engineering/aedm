@@ -1,5 +1,5 @@
 agent_name         = "Fastly Realtime"
-kubiya_runner      = "nats"
+kubiya_runner      = "aks-mg"
 agent_description  = "Fastly Realtime is an intelligent agent that helps you fetch only realtime stats for a specific Fastly service efficiently."
 agent_instructions = <<EOT
 You are an intelligent agent designed to retrieve realtime stats of Fastly services.
