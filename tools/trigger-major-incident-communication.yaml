@@ -8,7 +8,7 @@ tools:
       # Set default values for environment variables
       REPO_URL="${REPO_URL:-https://github.com/kubiya-solutions-engineering/aedm}"
       REPO_NAME="${REPO_NAME:-aedm}"
-      SOURCE_CODE_DIR="${SOURCE_CODE_DIR:-/src/trigger-incident}"
+      SOURCE_CODE_DIR="${SOURCE_CODE_DIR:-/src/pager_duty/trigger_incident}"
       REPO_BRANCH="${REPO_BRANCH:-main}"
       REPO_DIR="${REPO_DIR:-$REPO_NAME}"
       BIN_DIR="${BIN_DIR:-/usr/local/bin}"
@@ -24,24 +24,14 @@ tools:
         apt-get update -qq > /dev/null && apt-get install -y -qq git > /dev/null
       }
 
-      install_jq() {
-        apt-get update -qq > /dev/null && apt-get install -y -qq jq > /dev/null
+      # Function to install pip dependencies if not cached
+      install_pip_dependencies() {
+        export PIP_CACHE_DIR="$PIP_CACHE_DIR"
+        pip install -r requirements.txt --cache-dir "$PIP_CACHE_DIR" --quiet > /dev/null
       }
 
-      install_slack_cli() {
-        curl -s https://packagecloud.io/install/repositories/slacktechnologies/slack/script.deb.sh | bash > /dev/null
-        apt-get install -y -qq slack > /dev/null
-      }
-
-      install_pagerduty_cli() {
-        pip install pdpyras
-      }
-
-      # Install git, jq, slack CLI, and PagerDuty CLI
+      # Install git
       install_git
-      install_jq
-      install_slack_cli
-      install_pagerduty_cli
 
       # Clone repository if not already cloned
       if [ ! -d "$REPO_DIR" ]; then
@@ -59,9 +49,12 @@ tools:
       # cd into the cloned repo
       cd "${REPO_DIR}/${SOURCE_CODE_DIR}"
 
+      # Install pip dependencies
+      install_pip_dependencies
+
       # Run the script
-      chmod +x ./trigger-major-incident-communication.sh
-      exec ./trigger-major-incident-communication.sh --description "{{ .description }}"
+      export PYTHONPATH="${PYTHONPATH}:/${REPO_DIR}/${SOURCE_CODE_DIR}"
+      exec python trigger-major-incident-communication.py --description "{{ .description }}"
     args:
       - name: description
         description: The description of the incident.
@@ -76,6 +69,3 @@ tools:
       - AZURE_CLIENT_SECRET
       - PD_API_KEY
       - KUBIYA_USER_EMAIL
-    with_volumes:
-      - name: sqlite_data
-        path: /sqlite_data

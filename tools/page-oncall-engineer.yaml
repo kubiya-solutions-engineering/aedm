@@ -54,7 +54,7 @@ tools:
 
       # Run the script
       export PYTHONPATH="${PYTHONPATH}:/${REPO_DIR}/${SOURCE_CODE_DIR}"
-      exec python page-oncall-engineer/page-oncall-engineer.py --description "{{ .description }}"
+      exec python pager_duty/page_oncall_engineer/page-oncall-engineer.py --description "{{ .description }}"
     args:
       - name: description
         description: The description of the problem.
