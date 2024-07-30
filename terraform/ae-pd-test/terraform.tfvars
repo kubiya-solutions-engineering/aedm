@@ -21,7 +21,7 @@ secrets            = ["FSAPI_PROD", "AZURE_TENANT_ID", "AZURE_CLIENT_ID", "AZURE
 integrations       = ["slack"]
 users              = []
 groups             = ["Admin"]
-agent_tool_sources = ["https://github.com/kubiya-solutions-engineering/aedm/tools/pager_duty/*"]
+agent_tool_sources = ["https://github.com/kubiya-solutions-engineering/aedm/tools/*"]
 links              = []
 environment_variables = {}
 
