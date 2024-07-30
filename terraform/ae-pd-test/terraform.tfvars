@@ -17,11 +17,11 @@ environment_variables = {}
 
 starters = [
     {
-      name = "🚨 Major Incident: Platform/Brand/Product is malfunctioning"
+      name = "🚨 Major Incident"
       command      = "Create an incident for Major Incident via Kubi service in PagerDuty"
     },
     {
-      name = "📟 Page the on-call engineers"
+      name = "📟 Page on-call engineers"
       command      = "Page the on-call engineer via PagerDuty"
     }
   ]
@@ -31,7 +31,7 @@ log_level        = "INFO"
 
 // Enable debug mode
 // Debug mode allows extra logging and debugging information
-debug = false
+debug = true
 
 // dry run
 // When enabled, the agent will not apply the changes but will show the changes that will be applied
