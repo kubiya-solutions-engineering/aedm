@@ -44,11 +44,6 @@ def main(description):
         print("Usage: page-oncall-engineer.py --description <description>")
         return
 
-    confirmation = input("Are you sure you want to page the oncall engineer? (Yes/No): ").strip().lower()
-    if confirmation not in ["yes", "y"]:
-        print("Operation cancelled.")
-        return
-
     pd_incident_id = create_pd_incident(description)
     print(f"The on-call engineer has been paged. They will reach out to you as soon as possible. Your PagerDuty incident URL is https://aetnd.pagerduty.com/incidents/{pd_incident_id}")
 
