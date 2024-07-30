@@ -29,7 +29,7 @@ tools:
       }
 
       install_pagerduty_cli() {
-        pip install pdpyras
+        apt-get update -qq > /dev/null && apt-get install -y -qq pagerduty-cli > /dev/null
       }
 
       # Install git, jq, and PagerDuty CLI
