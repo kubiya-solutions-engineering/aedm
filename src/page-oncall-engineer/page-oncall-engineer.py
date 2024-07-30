@@ -26,10 +26,6 @@ def create_pd_incident(description):
             "body": {
                 "type": "incident_body",
                 "details": description
-            },
-            "priority": {
-                "id": "P3",
-                "type": "priority_reference"
             }
         }
     }
