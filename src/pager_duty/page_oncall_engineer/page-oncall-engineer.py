@@ -37,8 +37,8 @@ def create_pd_incident(description):
         raise Exception(f"Failed to create incident: {response.text}")
 
 def main(description):
-    print("This is for starting a Severity 1 Major Incident. Use only in the event of a major outage affecting the majority of the consumers.  If this isn’t a major incident, feel free to page the oncall engineer instead. Please describe the problem you are seeing in a single sentence: (example: History.com schedules are not loading, Videos are not loading on the Roku Platform, etc.")
-    
+    print("We will now page the oncall engineer via PagerDuty. Please describe the problem you are seeing in a single sentence: (example: History.com is having an issue, the schedule for lifetime is not loading, etc")
+
     if not description:
         print("Usage: page-oncall-engineer.py --description <description>")
         return
