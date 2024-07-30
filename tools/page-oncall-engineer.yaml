@@ -61,6 +61,7 @@ tools:
         required: true
     env:
       - PD_API_KEY
+      - KUBIYA_USER_EMAIL
     with_volumes:
       - name: sqlite_data
         path: /sqlite_data

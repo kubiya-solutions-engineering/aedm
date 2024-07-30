@@ -9,7 +9,8 @@ def create_pd_incident(description):
     url = "https://api.pagerduty.com/incidents"
     headers = {
         "Authorization": f"Token token={os.getenv('PD_API_KEY')}",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "From": os.getenv('KUBIYA_USER_EMAIL')  # Add the From header with the user's email address
     }
     payload = {
         "incident": {
