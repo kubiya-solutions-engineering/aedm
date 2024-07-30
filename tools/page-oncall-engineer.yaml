@@ -61,7 +61,11 @@ tools:
         description: The description of the problem.
         required: true
     env:
-      - PD_API_TOKEN
+      - PD_API_KEY
+      - AZURE_TENANT_ID
+      - AZURE_CLIENT_ID
+      - AZURE_CLIENT_SECRET
+      - FSAPI_PROD
     with_volumes:
       - name: sqlite_data
         path: /sqlite_data
