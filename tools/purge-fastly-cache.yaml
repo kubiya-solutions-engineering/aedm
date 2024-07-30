@@ -73,3 +73,5 @@ tools:
       - name: brand_or_platform_or_operation
         description: |
           The brand, platform, or operation to perform cache clear. Available options include brands: aenetworks, aetv, biography, crimecentral, crimeandinvestigation, fyi, history, historyvault, historyvaultca, lifetime, lifetimemovies, lmc; and platforms: android, androidtv, appletv, firetv, ios, kepler, roku, tizen, tvos, vizio, web, webos
+    env:
+      - FASTLY_API_TOKEN
