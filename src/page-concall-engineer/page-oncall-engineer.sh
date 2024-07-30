@@ -7,7 +7,7 @@ echo "We will now page the oncall engineer via PagerDuty. Please describe the pr
 create_pd_incident() {
     local description="$1"
     local title="Assistance requested via Kubi"
-    local incident_id=$(curl -X POST -H "Authorization: Token token=$PD_API_TOKEN" -H "Content-Type: application/json" -d "{
+    local incident_id=$(curl -X POST -H "Authorization: Token token=$PD_API_KEY" -H "Content-Type: application/json" -d "{
         \"incident\": {
             \"type\": \"incident\",
             \"title\": \"$title - $description\",
