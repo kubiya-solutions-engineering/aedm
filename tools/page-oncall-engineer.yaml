@@ -1,8 +1,7 @@
 tools:
   - name: page-oncall-engineer
     image: python:3.11
-    description: |
-      This tool pages the on-call engineer via PagerDuty.
+    description: This tool pages the on-call engineer via PagerDuty.
     alias: page-oncall-engineer
     content: |
       # Set default values for environment variables
@@ -62,6 +61,3 @@ tools:
         required: true
     env:
       - PD_API_KEY
-    with_volumes:
-      - name: sqlite_data
-        path: /sqlite_data

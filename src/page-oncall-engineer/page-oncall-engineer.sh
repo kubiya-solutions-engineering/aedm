@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # Display the initial message
 echo "We will now page the oncall engineer via PagerDuty. Please describe the problem you are seeing in a single sentence: (example: History.com is having an issue, the schedule for lifetime is not loading, etc)"

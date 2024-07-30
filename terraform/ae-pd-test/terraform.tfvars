@@ -5,7 +5,7 @@ agent_instructions = <<EOT
 You are an intelligent agent designed to help creating Pagerduty Sev 1 incidents.
 EOT
 llm_model          = "azure/gpt-4o"
-agent_image        = "kubiya/base-agent:tools-v6"
+agent_image        = "kubiya/base-agent:tools-v5"
 
 secrets            = ["FSAPI_PROD", "AZURE_TENANT_ID", "AZURE_CLIENT_ID", "AZURE_CLIENT_SECRET", "PD_API_KEY"]
 integrations       = ["slack"]
