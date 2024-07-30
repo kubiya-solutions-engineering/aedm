@@ -99,8 +99,6 @@ def send_slack_message(channel, message):
     response.raise_for_status()
 
 def main(description):
-    print("This is for starting a Severity 1 Major Incident. Use only in the event of a major outage affecting the majority of the consumers.  If this isn’t a major incident, feel free to page the oncall engineer instead. Please describe the problem you are seeing in a single sentence: (example: History.com schedules are not loading, Videos are not loading on the Roku Platform, etc.")
-    
     if not description:
         print("Usage: trigger-major-incident-communication.py --description <description>")
         return

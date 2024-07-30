@@ -37,8 +37,6 @@ def create_pd_incident(description):
         raise Exception(f"Failed to create incident: {response.text}")
 
 def main(description):
-    print("We will now page the oncall engineer via PagerDuty. Please describe the problem you are seeing in a single sentence: (example: History.com is having an issue, the schedule for lifetime is not loading, etc")
-
     if not description:
         print("Usage: page-oncall-engineer.py --description <description>")
         return
