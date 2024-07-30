@@ -26,6 +26,7 @@ resource "kubiya_agent" "agent" {
   groups       = var.groups
   links        = var.links
   tool_sources = var.agent_tool_sources
+  starters     = var.starters
   
   environment_variables = merge(
     {

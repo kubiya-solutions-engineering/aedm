@@ -26,7 +26,7 @@ starters = [
       name = "📟 Page oncall engineer"
       command      = "Page the oncall engineer via PagerDuty"
     }
-  ]
+]
   
 // Environment variables
 log_level        = "INFO"
