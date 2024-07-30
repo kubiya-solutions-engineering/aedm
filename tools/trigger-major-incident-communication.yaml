@@ -1,8 +1,7 @@
 tools:
   - name: trigger-major-incident-response
     image: python:3.11
-    description: |
-      This tool creates an incident for "Major Incident via Kubi" service in PagerDuty, generates a Teams bridge link, creates a Fresh Service Ticket, sends a SEV1 message in #incident_response Slack channel, and provides the necessary details.
+    description: This tool creates an incident for "Major Incident via Kubi" service in PagerDuty, generates a Teams bridge link, creates a Fresh Service Ticket, sends a SEV1 message in incident_response Slack channel, and provides the necessary details.
     alias: trigger-major-incident-response
     content: |
       # Set default values for environment variables
