@@ -40,14 +40,14 @@ def create_pd_incident(description):
             "body": {
                 "type": "incident_body",
                 "details": description
-            },
-            "priority": {
-                "id": "P1",
-                "type": "priority_reference"
             }
         }
     }
+    print(f"Payload: {json.dumps(payload, indent=2)}")
+    print(f"Headers: {headers}")
     response = requests.post(url, headers=headers, data=json.dumps(payload))
+    print(f"Response Status Code: {response.status_code}")
+    print(f"Response Body: {response.text}")
     response.raise_for_status()
     return response.json()["incident"]["id"]
 
