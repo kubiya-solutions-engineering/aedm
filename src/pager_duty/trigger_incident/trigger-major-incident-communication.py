@@ -65,11 +65,11 @@ def create_pd_incident(description):
     response.raise_for_status()
     return response.json()["incident"]["id"]
 
-def create_ticket(description, incident_id, incident_commander):
+def create_ticket(description, business_impact, incident_id, incident_commander):
     url = "https://aenetworks.freshservice.com/api/v2/tickets"
     user_email = os.getenv('KUBIYA_USER_EMAIL')
     payload = {
-        "description": f"{description}<br><strong>Incident Commander:</strong> {incident_commander}<br><strong>Detection Method:</strong> Detection Method<br><strong>Business Impact:</strong> Business Impact<br><strong>Ticket Link:</strong>PagerDuty Incident",
+        "description": f"{description}<br><strong>Incident Commander:</strong> {incident_commander}<br><strong>Detection Method:</strong> Detection Method<br><strong>Business Impact:</strong> {business_impact}<br><strong>Ticket Link:</strong>PagerDuty Incident",
         "subject": f"MAJOR INCIDENT pagerduty-kubiya-page-oncall-service - Major Incident via Kubi",
         "email": user_email,
         "priority": 1,
@@ -112,16 +112,16 @@ def send_slack_message(channel, message):
     response = requests.post(url, headers=headers, data=json.dumps(payload))
     response.raise_for_status()
 
-def main(description):
-    if not description:
-        print("Usage: trigger-major-incident-communication.py --description <description>")
+def main(description, business_impact):
+    if not description or not business_impact:
+        print("Usage: trigger-major-incident-communication.py --description <description> --business_impact <business_impact>")
         return
 
     access_token = get_access_token()
     escalation_policy_id = "PPBZA76"  # Replace with your actual escalation policy ID
     incident_commander = get_oncall_engineer(escalation_policy_id)
     pd_incident_id = create_pd_incident(description)
-    ticket_id = create_ticket(description, pd_incident_id, incident_commander)
+    ticket_id = create_ticket(description, business_impact, pd_incident_id, incident_commander)
     ticket_url = f"https://aenetworks.freshservice.com/a/tickets/{ticket_id}"
     meeting_link = create_meeting(access_token)
 
@@ -129,8 +129,8 @@ def main(description):
     ************** SEV 1 ****************
     <@U04UKPX585S>
     Incident Commander: {incident_commander}
-    Detection Method: Slack thru Kubiya
-    Business Impact: Business Impact
+    Description: {description}
+    Business Impact: {business_impact}
     Bridge Link: <{meeting_link}|Bridge Link>
     PagerDuty Incident URL: https://aetnd.pagerduty.com/incidents/{pd_incident_id}
     FS Ticket URL: {ticket_url}
@@ -143,5 +143,6 @@ def main(description):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Trigger Major Incident Response.")
     parser.add_argument("--description", required=True, help="The description of the incident.")
+    parser.add_argument("--business_impact", required=True, help="The business impact of the incident.")
     args = parser.parse_args()
-    main(args.description)
+    main(args.description, args.business_impact)
