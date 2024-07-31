@@ -18,6 +18,20 @@ def get_access_token():
     response.raise_for_status()
     return response.json().get('access_token')
 
+def get_oncall_engineer():
+    url = "https://api.pagerduty.com/oncalls"
+    headers = {
+        "Authorization": f"Token token={os.getenv('PD_API_KEY')}",
+        "Accept": "application/vnd.pagerduty+json;version=2"
+    }
+    response = requests.get(url, headers=headers, params={"time_zone": "UTC"})
+    response.raise_for_status()
+    oncalls = response.json().get('oncalls', [])
+    for oncall in oncalls:
+        if oncall['schedule']['id'] == "PUSDB5G":  # Replace with your actual schedule ID
+            return oncall['user']['summary']
+    return "Incident Commander"
+
 def create_pd_incident(description):
     url = "https://api.pagerduty.com/incidents"
     headers = {
@@ -51,11 +65,11 @@ def create_pd_incident(description):
     response.raise_for_status()
     return response.json()["incident"]["id"]
 
-def create_ticket(description, incident_id):
+def create_ticket(description, incident_id, incident_commander):
     url = "https://aenetworks.freshservice.com/api/v2/tickets"
     user_email = os.getenv('KUBIYA_USER_EMAIL')
     payload = {
-        "description": f"{description}<br><strong>Incident Commander:</strong> Incident Commander<br><strong>Detection Method:</strong> Detection Method<br><strong>Business Impact:</strong> Business Impact<br><strong>Ticket Link:</strong>PagerDuty Incident",
+        "description": f"{description}<br><strong>Incident Commander:</strong> {incident_commander}<br><strong>Detection Method:</strong> Detection Method<br><strong>Business Impact:</strong> Business Impact<br><strong>Ticket Link:</strong>PagerDuty Incident",
         "subject": f"MAJOR INCIDENT pagerduty-kubiya-page-oncall-service - Major Incident via Kubi",
         "email": user_email,
         "priority": 1,
@@ -104,15 +118,16 @@ def main(description):
         return
 
     access_token = get_access_token()
+    incident_commander = get_oncall_engineer()
     pd_incident_id = create_pd_incident(description)
-    ticket_id = create_ticket(description, pd_incident_id)
+    ticket_id = create_ticket(description, pd_incident_id, incident_commander)
     ticket_url = f"https://aenetworks.freshservice.com/a/tickets/{ticket_id}"
     meeting_link = create_meeting(access_token)
 
     message = f"""
     ************** SEV 1 ****************
     <@U04UKPX585S>
-    Incident Commander: Incident Commander
+    Incident Commander: {incident_commander}
     Detection Method: Detection Method
     Business Impact: Business Impact
     Bridge Link: <{meeting_link}|Bridge Link>
