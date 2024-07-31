@@ -18,17 +18,17 @@ def get_access_token():
     response.raise_for_status()
     return response.json().get('access_token')
 
-def get_oncall_engineer():
-    url = "https://api.pagerduty.com/oncalls"
+def get_oncall_engineer(escalation_policy_id):
+    url = f"https://api.pagerduty.com/oncalls?escalation_policy_ids[]={escalation_policy_id}"
     headers = {
         "Authorization": f"Token token={os.getenv('PD_API_KEY')}",
         "Accept": "application/vnd.pagerduty+json;version=2"
     }
-    response = requests.get(url, headers=headers, params={"time_zone": "UTC"})
+    response = requests.get(url, headers=headers)
     response.raise_for_status()
     oncalls = response.json().get('oncalls', [])
     for oncall in oncalls:
-        if oncall.get('schedule') and oncall['schedule'].get('id') == "PUSDB5G":  # Replace with your actual schedule ID
+        if oncall.get('user'):
             return oncall['user']['summary']
     return "Incident Commander"
 
@@ -118,7 +118,8 @@ def main(description):
         return
 
     access_token = get_access_token()
-    incident_commander = get_oncall_engineer()
+    escalation_policy_id = "PPBZA76"  # Replace with your actual escalation policy ID
+    incident_commander = get_oncall_engineer(escalation_policy_id)
     pd_incident_id = create_pd_incident(description)
     ticket_id = create_ticket(description, pd_incident_id, incident_commander)
     ticket_url = f"https://aenetworks.freshservice.com/a/tickets/{ticket_id}"
