@@ -28,7 +28,7 @@ def get_oncall_engineer():
     response.raise_for_status()
     oncalls = response.json().get('oncalls', [])
     for oncall in oncalls:
-        if oncall['schedule']['id'] == "PUSDB5G":  # Replace with your actual schedule ID
+        if oncall.get('schedule') and oncall['schedule'].get('id') == "PUSDB5G":  # Replace with your actual schedule ID
             return oncall['user']['summary']
     return "Incident Commander"
 
