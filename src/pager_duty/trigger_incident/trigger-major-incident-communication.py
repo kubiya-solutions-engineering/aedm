@@ -129,7 +129,7 @@ def main(description):
     ************** SEV 1 ****************
     <@U04UKPX585S>
     Incident Commander: {incident_commander}
-    Detection Method: Detection Method
+    Detection Method: Slack thru Kubiya
     Business Impact: Business Impact
     Bridge Link: <{meeting_link}|Bridge Link>
     PagerDuty Incident URL: https://aetnd.pagerduty.com/incidents/{pd_incident_id}

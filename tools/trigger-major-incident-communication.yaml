@@ -8,7 +8,7 @@ tools:
       # Set default values for environment variables
       REPO_URL="${REPO_URL:-https://github.com/kubiya-solutions-engineering/aedm}"
       REPO_NAME="${REPO_NAME:-aedm}"
-      SOURCE_CODE_DIR="${SOURCE_CODE_DIR:-/src}"
+      SOURCE_CODE_DIR="${SOURCE_CODE_DIR:-/src/pager_duty/trigger_incident}"
       REPO_BRANCH="${REPO_BRANCH:-main}"
       REPO_DIR="${REPO_DIR:-$REPO_NAME}"
       BIN_DIR="${BIN_DIR:-/usr/local/bin}"
@@ -54,10 +54,13 @@ tools:
 
       # Run the script
       export PYTHONPATH="${PYTHONPATH}:/${REPO_DIR}/${SOURCE_CODE_DIR}"
-      exec python pager_duty/trigger_incident/trigger-major-incident-communication.py --description "{{ .description }}"
+      exec python trigger-major-incident-communication.py --description "{{ .description }}" --business_impact "{{ .business_impact }}"
     args:
       - name: description
         description: The description of the incident.
+        required: true
+      - name: business_impact
+        description: The business impact of the incident.
         required: true
     env:
       - FSAPI_PROD
